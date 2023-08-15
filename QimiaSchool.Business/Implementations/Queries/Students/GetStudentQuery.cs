@@ -10,7 +10,7 @@ namespace QimiaSchool.Business.Implementations.Queries.Students
 {
     public class GetStudentQuery:IRequest<StudentDto>
     {
-        public int Id { get; set; }
+        public int Id { get; }
 
         public GetStudentQuery(int id)
         {

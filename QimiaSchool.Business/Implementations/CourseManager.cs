@@ -1,6 +1,7 @@
 ﻿using QimiaSchool.Business.Abstractions;
 using QimiaSchool.DataAccess.Entities;
 using QimiaSchool.DataAccess.Repositories.Abstractions;
+using QimiaSchool.DataAccess.Repositories.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,11 @@ namespace QimiaSchool.Business.Implementations
         public Task UpdateCourseById(Course course, CancellationToken cancellationToken)
         {
             return _courseRepository.UpdateAsync(course, cancellationToken);
+        }
+
+        public Task<IEnumerable<Course>> GetAllCoursesAsync(CancellationToken cancellationToken)
+        {
+            return _courseRepository.GetAllAsync(cancellationToken);
         }
     }
 }

@@ -8,12 +8,7 @@ using System.Threading.Tasks;
 
 namespace QimiaSchool.Business.Implementations.Queries.Enrollments;
 
-public class GetEnrollmentQuery : IRequest<EnrollmentDto>
+public class GetEnrollmentsQuery : IRequest<List<EnrollmentDto>>
 {
-    public int Id { get; }
 
-    public GetEnrollmentQuery(int id)
-    {
-        Id = id;
-    }
 }

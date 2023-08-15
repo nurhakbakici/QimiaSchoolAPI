@@ -42,6 +42,11 @@ namespace QimiaSchool.Business.Implementations
         {
             return UpdateStudentAsync(student, cancellationToken);
         }
+
+        public Task<IEnumerable<Student>> GetAllStudentsAsync(CancellationToken cancellationToken)
+        {
+            return _studentRepository.GetAllAsync(cancellationToken);
+        }
     }
 }
 

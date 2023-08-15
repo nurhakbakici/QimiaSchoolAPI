@@ -10,7 +10,7 @@ namespace QimiaSchool.Business.Implementations.Queries.Courses
 {
     public class GetCourseQuery : IRequest<CourseDto>
     {
-        public int Id { get; set; }
+        public int Id { get; }
 
         public GetCourseQuery(int id)
         {
@@ -18,3 +18,5 @@ namespace QimiaSchool.Business.Implementations.Queries.Courses
         }
     }
 }
+
+// we only used get property because in this code all we want is to get the item we will not set anything.

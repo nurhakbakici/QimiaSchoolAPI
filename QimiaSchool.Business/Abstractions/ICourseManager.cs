@@ -11,4 +11,6 @@ public interface ICourseManager
     public Task DeleteCourseById(int courseId, CancellationToken cancellationToken);
 
     public Task UpdateCourseById(Course course, CancellationToken cancellationToken);
+
+    public Task<IEnumerable<Course>> GetAllCoursesAsync(CancellationToken cancellationToken);
 }

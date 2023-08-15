@@ -1,14 +1,14 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QimiaSchool.Business.Implementations.Queries.Courses.CourseDtos;
+namespace QimiaSchool.Business.Implementations.Commands.Courses.CourseDtos;
 
-public class CourseDto
+public class UpdateCourseDto : IRequest<Unit>
 {
-    public int ID { get; set; }
     public string? Title { get; set; }
     public int Credits { get; set; }
 }

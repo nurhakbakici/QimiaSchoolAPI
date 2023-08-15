@@ -20,9 +20,7 @@ public class MapperProfile : Profile
             .ForMember(dest => dest.Enrollments, opt => opt.MapFrom(src => src.Enrollments))
             ;
         CreateMap<Course, CourseDto>()
-            ;
-
-        
+            ;     
     }
 }
 

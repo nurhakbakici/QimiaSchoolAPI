@@ -11,4 +11,7 @@ public class UpdateStudentDto
     public string? FirstMidName { get; set; }
     public string? LastName { get; set; }
     public DateTime? EnrollmentDate { get; set; }
+
+    /* unlike to CreateStudentDto this time we have enrollmentDate too.
+      Because when we update a data we may also want to be able to update its enrollment date. */
 }

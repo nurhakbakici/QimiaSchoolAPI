@@ -10,5 +10,7 @@ public interface IStudentManager
 
     public Task UpdateStudentAsync(Student student, CancellationToken cancellationToken);
 
-    public Task DeleteStudentByIdAsync(int studentId, CancellationToken cancellationToken);  
+    public Task DeleteStudentByIdAsync(int studentId, CancellationToken cancellationToken);
+
+    public Task<IEnumerable<Student>> GetAllStudentsAsync(CancellationToken cancellationToken);
 }

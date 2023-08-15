@@ -12,4 +12,6 @@ public interface IEnrollmentManager
     public Task UpdateEnrollmentAsync(Enrollment enrollment, CancellationToken cancellationToken);
 
     public Task DeleteEnrollmentByIdAsync(int enrollmentId, CancellationToken cancellationToken);
+
+    public Task<IEnumerable<Enrollment>> GetAllEnrollmentsAsync(CancellationToken cancellationToken);
 }
