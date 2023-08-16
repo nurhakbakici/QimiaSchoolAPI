@@ -10,6 +10,7 @@ using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Qimia School", Version = "v1" });
@@ -70,6 +72,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -81,6 +84,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
