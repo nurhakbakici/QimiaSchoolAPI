@@ -46,7 +46,23 @@ builder.Services.AddDbContext<QimiaSchoolDbContext>(options =>
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
+
 builder.Services.AddBusinessLayer();
+
+// ask this code to bugra
+builder.Services.AddLogging(i =>
+{
+    i.AddConsole();
+});
+
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "QimiaSchool";
+});
+
 
 
 builder.Services.AddAuthentication(options =>
@@ -54,6 +70,8 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+
+
 .AddJwtBearer(options =>
 {
     options.Authority = $"{builder.Configuration["Auth0:Domain"]}";
