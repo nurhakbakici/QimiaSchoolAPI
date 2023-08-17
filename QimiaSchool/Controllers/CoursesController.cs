@@ -5,6 +5,8 @@ using QimiaSchool.Business.Implementations.Commands.Courses;
 using QimiaSchool.Business.Implementations.Commands.Courses.CourseDtos;
 using QimiaSchool.Business.Implementations.Queries.Courses;
 using QimiaSchool.Business.Implementations.Queries.Courses.CourseDtos;
+using QimiaSchool.DataAccess.Entities;
+using Serilog;
 
 namespace QimiaSchool.Controllers;
 
@@ -14,9 +16,11 @@ namespace QimiaSchool.Controllers;
 public class CoursesController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly Serilog.ILogger _courseLogger;
     public CoursesController(IMediator mediator)
     {
         _mediator = mediator;
+        _courseLogger = Log.ForContext("SourceContext", typeof(CoursesController).FullName);
     }
 
     [HttpPost]
@@ -24,6 +28,9 @@ public class CoursesController : Controller
         [FromBody] CreateCourseDto course,
         CancellationToken cancellationToken)
     {
+
+        _courseLogger.Information("Request for creating a course is accepted. Course:{@course}", course);
+
         var response = await _mediator.Send(new CreateCourseCommand(course), cancellationToken);
 
         return CreatedAtAction(
@@ -38,6 +45,8 @@ public class CoursesController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
+        _courseLogger.Information("Request for getting a course is accepted.");
+
         return _mediator.Send(
             new GetCourseQuery(id),
             cancellationToken);
@@ -46,6 +55,8 @@ public class CoursesController : Controller
     [HttpGet]
     public Task<List<CourseDto>> GetCourses(CancellationToken cancellationToken)
     {
+        _courseLogger.Information("Request for getting courses is accepted.");
+
         return _mediator.Send(
             new GetCoursesQuery(),
             cancellationToken);
@@ -57,6 +68,8 @@ public class CoursesController : Controller
         [FromBody] UpdateCourseDto course,
         CancellationToken cancellationToken)
     {
+        _courseLogger.Information("Request for updating a course is accepted. Course:{@course}", course);
+
         await _mediator.Send(
             new UpdateCourseCommand(id, course),
             cancellationToken);
@@ -69,6 +82,8 @@ public class CoursesController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
+        _courseLogger.Information("Request for deleting a course is accepted");
+
         await _mediator.Send(
             new DeleteCourseCommand(id),
             cancellationToken);

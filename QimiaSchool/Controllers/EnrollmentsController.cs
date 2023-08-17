@@ -5,6 +5,8 @@ using QimiaSchool.Business.Implementations.Commands.Enrollments;
 using QimiaSchool.Business.Implementations.Commands.Enrollments.EnrollmentDtos;
 using QimiaSchool.Business.Implementations.Queries.Enrollments;
 using QimiaSchool.Business.Implementations.Queries.Enrollments.EnrollmentDtos;
+using QimiaSchool.DataAccess.Entities;
+using Serilog;
 
 namespace QimiaSchool.Controllers;
 
@@ -14,9 +16,11 @@ namespace QimiaSchool.Controllers;
 public class EnrollmentsController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly Serilog.ILogger _enrollmentLogger;
     public EnrollmentsController(IMediator mediator)
     {
         _mediator = mediator;
+        _enrollmentLogger = Log.ForContext("Source Context", typeof(EnrollmentsController).FullName); 
     }
 
     [HttpPost]
@@ -24,6 +28,9 @@ public class EnrollmentsController : Controller
         [FromBody] CreateEnrollmentDto enrollment,
         CancellationToken cancellationToken)
     {
+
+        _enrollmentLogger.Information("Request for creating a enrollment is accepted. Enrollment:{@enrollment}", enrollment);
+
         var response = await _mediator.Send(new CreateEnrollmentCommand(enrollment), cancellationToken);
 
         return CreatedAtAction(
@@ -38,6 +45,8 @@ public class EnrollmentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
+        _enrollmentLogger.Information("Request for getting an enrollment is accepted.");
+
         return _mediator.Send(
             new GetEnrollmentQuery(id),
             cancellationToken);
@@ -47,6 +56,8 @@ public class EnrollmentsController : Controller
     public Task<List<EnrollmentDto>> GetEnrollments(
         CancellationToken cancellationToken)
     {
+        _enrollmentLogger.Information("Request for getting  enrollments is accepted." );
+
         return _mediator.Send(
             new GetEnrollmentsQuery(),
             cancellationToken);
@@ -58,6 +69,8 @@ public class EnrollmentsController : Controller
         [FromBody] UpdateEnrollmentDto enrollment,
         CancellationToken cancellationToken)
     {
+        _enrollmentLogger.Information("Request for updating an enrollment is accepted. Enrollment:{@enrollment}", enrollment);
+
         await _mediator.Send(
             new UpdateEnrollmentCommand(id, enrollment),
             cancellationToken);
@@ -70,6 +83,8 @@ public class EnrollmentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
+        _enrollmentLogger.Information("Request for deleting an enrollment is accepted.");
+
         await _mediator.Send(
             new DeleteEnrollmentCommand(id),
             cancellationToken);

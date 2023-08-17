@@ -5,6 +5,8 @@ using QimiaSchool.Business.Implementations.Commands.Students;
 using QimiaSchool.Business.Implementations.Commands.Students.StudentDtos;
 using QimiaSchool.Business.Implementations.Queries.Students.StudentDtos;
 using QimiaSchool.Business.Implementations.Queries.Students;
+using Serilog;
+using QimiaSchool.DataAccess.Entities;
 
 namespace QimiaSchool.Controllers;
 
@@ -14,9 +16,11 @@ namespace QimiaSchool.Controllers;
 public class StudentsController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly Serilog.ILogger _studentLogger;
     public StudentsController(IMediator mediator)
     {
         _mediator = mediator;
+        _studentLogger = Log.ForContext("SourceContext", typeof(StudentsController).FullName);
     }
 
     [HttpPost]
@@ -24,6 +28,9 @@ public class StudentsController : Controller
         [FromBody] CreateStudentDto student,
         CancellationToken cancellationToken)
     {
+        _studentLogger.Information("Request for creating a student is accepted. Student:{@student}",student);
+
+
         var response = await _mediator.Send(new CreateStudentCommand(student), cancellationToken);
 
         return CreatedAtAction(
@@ -38,6 +45,8 @@ public class StudentsController : Controller
        [FromBody] UpdateStudentDto student,
        CancellationToken cancellationToken)
     {
+        _studentLogger.Information("Request for updating a student is accepted. Student:{@student}", student);
+
         await _mediator.Send(
             new UpdateStudentCommand(id, student),
             cancellationToken);
@@ -51,6 +60,8 @@ public class StudentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
+        _studentLogger.Information("Request for getting a student is accepted.");
+
         return _mediator.Send(
         new GetStudentQuery(id),
             cancellationToken);
@@ -59,6 +70,8 @@ public class StudentsController : Controller
     [HttpGet]
     public Task<List<StudentDto>> GetStudents(CancellationToken cancellationToken)
     {
+        _studentLogger.Information("Request for getting students is accepted.");
+
         return _mediator.Send(
             new GetStudentsQuery(),
             cancellationToken);
@@ -69,6 +82,8 @@ public class StudentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
+        _studentLogger.Information("Request for deleting a student is accepted.");
+
         await _mediator.Send(
             new DeleteStudentCommand(id),
             cancellationToken);

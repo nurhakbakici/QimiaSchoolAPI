@@ -11,6 +11,11 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Sinks.Elasticsearch;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +25,19 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithExceptionDetails()
+    .WriteTo.File(path: "logs/log.txt")
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+    {
+        IndexFormat = "dotnetLog",
+        AutoRegisterTemplate = true,
+        MinimumLogEventLevel = LogEventLevel.Information
+    })
+    .CreateLogger();
+
 
 
 builder.Services.AddDbContext<QimiaSchoolDbContext>(options =>
