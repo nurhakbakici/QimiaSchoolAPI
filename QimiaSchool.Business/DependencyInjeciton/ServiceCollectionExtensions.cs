@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using QimiaSchool.Business.Abstractions;
 using QimiaSchool.Business.Implementations;
+using QimiaSchool.DataAccess.MessageBroker.Asbtractions;
+using QimiaSchool.DataAccess.MessageBroker.Implementations;
 using System.Reflection;
 
 namespace QimiaSchool.Business.DependencyInjection;
@@ -27,6 +29,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IStudentManager, StudentManager>();
         serviceCollection.AddScoped<IEnrollmentManager, EnrollmentManager>();
         serviceCollection.AddScoped<ICourseManager, CourseManager>();
+        serviceCollection.AddScoped<IEventBus, EventBus>();
     }
 
     private static void AddAutoMapper(this IServiceCollection serviceCollection)

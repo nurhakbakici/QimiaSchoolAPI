@@ -51,7 +51,7 @@ public class CacheService : ICacheService
         var serializedValue = JsonSerializer.Serialize(value);
         await _cache.SetStringAsync(key, serializedValue, options, cancellationToken);
 
-        _logger.LogInformation("Cache is set for the key '{key]'", key);
+        _logger.LogInformation("Cache is set for the key '{key}'", key);
 
         return true;
 

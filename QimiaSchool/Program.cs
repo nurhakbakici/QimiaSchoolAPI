@@ -15,7 +15,10 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
-
+using QimiaSchool.DataAccess.MessageBroker.Implementations;
+using Microsoft.Extensions.Options;
+using MassTransit;
+using QimiaSchool.Business.Implementations.Events.Courses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +49,34 @@ builder.Services.AddDbContext<QimiaSchoolDbContext>(options =>
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
+
+builder.Services.Configure<MessageBrokerSettings>(
+    builder.Configuration.GetSection("MessageBroker"));
+
+builder.Services.AddSingleton(sp =>
+    sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+
+builder.Services.AddMassTransit(busConfigurator =>
+{
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+    busConfigurator.AddConsumer<CourseCreatedEventConsumer>();
+
+    busConfigurator.UsingRabbitMq((context, configurator) =>
+    {
+        MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+
+        configurator.Host(new Uri(settings.Host), h =>
+        {
+            h.Username(settings.UserName);
+            h.Password(settings.Password);
+        });
+
+        configurator.ConfigureEndpoints(context);
+    });
+});
+
 
 
 builder.Services.AddBusinessLayer();
