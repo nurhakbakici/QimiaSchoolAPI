@@ -126,3 +126,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { } // by this we will be able to access our program as a type within factory.

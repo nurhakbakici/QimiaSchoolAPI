@@ -20,15 +20,12 @@ public class GetCourseQueryHandler : IRequestHandler<GetCourseQuery, CourseDto>
 
     public async Task<CourseDto> Handle(GetCourseQuery request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var course = await _courseManager.GetCourseByIdAsync(request.Id, cancellationToken);
 
-            return _mapper.Map<CourseDto>(course);
-        }
-        catch (Exception exception)
-        {
-            throw new ArgumentNullException(exception.Message);
-        }
+
+        var course = await _courseManager.GetCourseByIdAsync(request.Id, cancellationToken);
+
+        return _mapper.Map<CourseDto>(course);
+
+
     }
 }

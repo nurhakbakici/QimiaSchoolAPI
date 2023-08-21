@@ -9,12 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QimiaSchool.DataAccess", "Q
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QimiaSchool.Business", "QimiaSchool.Business\QimiaSchool.Business.csproj", "{95F5B1E4-ED5B-44E0-B31F-EF5B2647C410}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QimiaSchool.Business.UnitTests", "QimiaSchool.Business.UnitTests\QimiaSchool.Business.UnitTests.csproj", "{66082358-5D84-493B-BA1B-229A78B1C3D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QimiaSchool.Business.UnitTests", "QimiaSchool.Business.UnitTests\QimiaSchool.Business.UnitTests.csproj", "{66082358-5D84-493B-BA1B-229A78B1C3D0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ELK", "ELK", "{0F5E040D-51D1-4A57-8233-BEFD332F53F0}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QimiaSchool.IntegrationTests", "QimiaSchool.IntegrationTests\QimiaSchool.IntegrationTests.csproj", "{429130FE-6364-4972-9AC4-21584FF5BBB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{66082358-5D84-493B-BA1B-229A78B1C3D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66082358-5D84-493B-BA1B-229A78B1C3D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66082358-5D84-493B-BA1B-229A78B1C3D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{429130FE-6364-4972-9AC4-21584FF5BBB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{429130FE-6364-4972-9AC4-21584FF5BBB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{429130FE-6364-4972-9AC4-21584FF5BBB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{429130FE-6364-4972-9AC4-21584FF5BBB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

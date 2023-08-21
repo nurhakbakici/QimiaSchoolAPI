@@ -2,25 +2,28 @@
 using QimiaSchool.Business.Implementations;
 using QimiaSchool.DataAccess.Entities;
 using QimiaSchool.DataAccess.Repositories.Abstractions;
+using QimiaSchool.Business.Abstractions;
 
 namespace QimiaSchool.Business.UnitTests;
 
 [TestFixture]
 internal class StudentManagerUnitTests
 {
-    private readonly Mock<IStudentRepository> _mockStudentRepository; // mocking is a process used for creating a mock object that can stimulate the behavior of the real object
+    private readonly Mock<IStudentRepository> _mockStudentRepository;// mocking is a process used for creating a mock object that can stimulate the behavior of the real object
+    private readonly Mock<ICacheService> _cacheService;
     private readonly StudentManager _studentManager;
 
     public StudentManagerUnitTests()
     {
         _mockStudentRepository = new Mock<IStudentRepository>();
-        _studentManager = new StudentManager(_mockStudentRepository.Object);
+        _cacheService = new Mock<ICacheService>();
+        _studentManager = new StudentManager(_mockStudentRepository.Object, _cacheService.Object);
     }
 
     [Test]
     public async Task CreateStudentAsync_WhenCalled_CallsRepository()
     {
-        // Arrange (set up the test)
+        // Arrange
         var testStudent = new Student
         {
             EnrollmentDate = DateTime.Now,
@@ -28,10 +31,10 @@ internal class StudentManagerUnitTests
             LastName = "Test"
         };
 
-        // Act (execute the test)
+        // Act
         await _studentManager.CreateStudentAsync(testStudent, default);
 
-        // Assert (verify the results)
+        // Assert
         _mockStudentRepository
             .Verify(
                 sr => sr.CreateAsync(
@@ -62,3 +65,5 @@ internal class StudentManagerUnitTests
                     It.IsAny<CancellationToken>()), Times.Once);
     }
 }
+
+

@@ -1,4 +1,5 @@
-﻿using QimiaSchool.Business.Abstractions;
+﻿using Microsoft.Identity.Client;
+using QimiaSchool.Business.Abstractions;
 using QimiaSchool.DataAccess.Entities;
 using QimiaSchool.DataAccess.Repositories.Abstractions;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace QimiaSchool.Business.Implementations
 {
@@ -33,7 +35,6 @@ namespace QimiaSchool.Business.Implementations
         {
             var cacheKey = $"student-{studentId}";
             var cachedStudent = await _cacheService.GetAsync<Student>(cacheKey, cancellationToken);
-
             if (cachedStudent != null)
             {
                 return cachedStudent;
@@ -42,13 +43,15 @@ namespace QimiaSchool.Business.Implementations
             var student = await _studentRepository.GetByIdAsync(studentId, cancellationToken);
             if (student != null)
             {
-                await _cacheService.SetAsync(cacheKey,student,TimeSpan.FromMinutes(5), cancellationToken);
+                await _cacheService.SetAsync(cacheKey, student, TimeSpan.FromMinutes(5), cancellationToken);
             }
 
             return student;
         }
 
-        
+
+
+
         public async Task DeleteStudentByIdAsync(int studentId, CancellationToken cancellationToken)
         {
             var cacheKey = $"student-{studentId}";
@@ -72,7 +75,7 @@ namespace QimiaSchool.Business.Implementations
                 await _cacheService.RemoveAsync(cacheKey, cancellationToken);
             }
 
-            await UpdateStudentAsync(student, cancellationToken);
+            await _studentRepository.UpdateAsync(student, cancellationToken);
         }
 
         public Task<IEnumerable<Student>> GetAllStudentsAsync(CancellationToken cancellationToken)

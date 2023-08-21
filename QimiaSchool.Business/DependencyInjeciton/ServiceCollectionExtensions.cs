@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
 
     private static void AddManagers(this IServiceCollection serviceCollection)
     {
+        serviceCollection.AddScoped<ICacheService, CacheService>();
         serviceCollection.AddScoped<IStudentManager, StudentManager>();
         serviceCollection.AddScoped<IEnrollmentManager, EnrollmentManager>();
         serviceCollection.AddScoped<ICourseManager, CourseManager>();
