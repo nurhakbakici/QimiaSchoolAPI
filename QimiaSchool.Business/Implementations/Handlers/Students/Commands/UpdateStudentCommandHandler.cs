@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using QimiaSchool.Business.Abstractions;
 using QimiaSchool.Business.Implementations.Commands.Students;
+using QimiaSchool.Business.Implementations.Events.Students;
+using QimiaSchool.DataAccess.MessageBroker.Asbtractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +14,12 @@ namespace QimiaSchool.Business.Implementations.Handlers.Students.Commands;
 public class UpdateStudentCommandHandler : IRequestHandler<UpdateStudentCommand, Unit> // it will handle commands from UpdateStudentCommand type and returna a unit type result.
 {
     private readonly IStudentManager _studentManager;
+    private readonly IEventBus _eventBus;
 
-    public UpdateStudentCommandHandler(IStudentManager studentManager)
+    public UpdateStudentCommandHandler(IStudentManager studentManager, IEventBus eventBus)
     {
         _studentManager = studentManager;
+        _eventBus = eventBus;
     }
 
 
@@ -28,6 +32,13 @@ public class UpdateStudentCommandHandler : IRequestHandler<UpdateStudentCommand,
         student.EnrollmentDate = request.Student.EnrollmentDate ?? student.EnrollmentDate;
 
         await _studentManager.UpdateStudentAsync(student, cancellationToken);
+
+        await _eventBus.PublishAsync(new StudentUpdatedEvent
+        {
+            Id = student.ID,
+            FirstMidName = student.FirstMidName,
+            LastName = student.LastName
+        });
 
         return Unit.Value;
     }

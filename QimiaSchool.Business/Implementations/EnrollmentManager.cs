@@ -13,10 +13,14 @@ public class EnrollmentManager : IEnrollmentManager
 {
 
     private readonly IEnrollmentRepository _enrollmentRepository;
-    public EnrollmentManager(IEnrollmentRepository enrollmentRepository)
+    private readonly ICacheService _cacheService;
+    public EnrollmentManager(IEnrollmentRepository enrollmentRepository, ICacheService cacheService)
     {
         _enrollmentRepository = enrollmentRepository;
+        _cacheService = cacheService;
     }
+
+
 
     public Task CreateEnrollmentAsync(Enrollment enrollment, CancellationToken cancellationToken)
     {
@@ -24,20 +28,59 @@ public class EnrollmentManager : IEnrollmentManager
         return _enrollmentRepository.CreateAsync(enrollment, cancellationToken);
     }
 
-    public Task<Enrollment> GetEnrollmentByIdAsync(int enrollmentId, CancellationToken cancellationToken)
+
+
+    public async Task<Enrollment> GetEnrollmentByIdAsync(int enrollmentId, CancellationToken cancellationToken)
     {
-        return _enrollmentRepository.GetByIdAsync(enrollmentId, cancellationToken);
+        var cacheKey = $"enrollment-{enrollmentId}";
+        var cachedEnrollment = await _cacheService.GetAsync<Enrollment>(cacheKey, cancellationToken);
+
+        if (cachedEnrollment != null)
+        {
+            return cachedEnrollment;
+        }
+
+        var enrollment = await _enrollmentRepository.GetByIdAsync(enrollmentId, cancellationToken);
+
+        if (enrollment != null)
+        {
+            await _cacheService.SetAsync(cacheKey,enrollment,TimeSpan.FromMinutes(5),cancellationToken);
+        }
+
+        return enrollment;
     }
 
-    public Task DeleteEnrollmentByIdAsync(int enrollmentId, CancellationToken cancellationToken)
+
+
+    public async Task DeleteEnrollmentByIdAsync(int enrollmentId, CancellationToken cancellationToken)
     {
-        return _enrollmentRepository.DeleteByIdAsync(enrollmentId, cancellationToken);
+        var cacheKey = $"enrollment-{enrollmentId}";
+        var cachedEnrollment = await _cacheService.GetAsync<Enrollment>(cacheKey, cancellationToken);
+
+        if (cachedEnrollment != null)
+        {
+            await _cacheService.RemoveAsync(cacheKey, cancellationToken);
+        }
+
+        await _enrollmentRepository.DeleteByIdAsync(enrollmentId, cancellationToken);
     }
-  
-    public Task UpdateEnrollmentAsync(Enrollment enrollment, CancellationToken cancellationToken)
+
+
+
+    public async Task UpdateEnrollmentAsync(Enrollment enrollment, CancellationToken cancellationToken)
     {
-        return _enrollmentRepository.UpdateAsync(enrollment, cancellationToken);
+        var cacheKey = $"enrollment-{enrollment.ID}";
+        var cachedEnrollment = await _cacheService.GetAsync<Enrollment>(cacheKey, cancellationToken);
+
+        if (cachedEnrollment != null)
+        {
+            await _cacheService.RemoveAsync(cacheKey, cancellationToken);
+        }
+
+        await _enrollmentRepository.UpdateAsync(enrollment, cancellationToken);
     }
+
+
 
     public Task<IEnumerable<Enrollment>> GetAllEnrollmentsAsync(CancellationToken cancellationToken)
     {
