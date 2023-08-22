@@ -45,7 +45,7 @@ public class CoursesController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        _courseLogger.Information("Request for getting a course is accepted.");
+        _courseLogger.Information("Request for getting a course with ID is accepted. ID : {CourseId}", id);
 
         return _mediator.Send(
             new GetCourseQuery(id),
@@ -82,7 +82,7 @@ public class CoursesController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        _courseLogger.Information("Request for deleting a course is accepted");
+        _courseLogger.Information("Request for deleting a course with ID is accepted. ID : {CourseId}", id);
 
         await _mediator.Send(
             new DeleteCourseCommand(id),

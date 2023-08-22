@@ -60,7 +60,7 @@ public class StudentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        _studentLogger.Information("Request for getting a student is accepted.");
+        _studentLogger.Information("Request for getting a student with ID is accepted. ID : {StudentId}",id);
 
         return _mediator.Send(
         new GetStudentQuery(id),
@@ -82,7 +82,7 @@ public class StudentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        _studentLogger.Information("Request for deleting a student is accepted.");
+        _studentLogger.Information("Request for getting a student with ID is accepted. ID : {StudentId}", id);
 
         await _mediator.Send(
             new DeleteStudentCommand(id),

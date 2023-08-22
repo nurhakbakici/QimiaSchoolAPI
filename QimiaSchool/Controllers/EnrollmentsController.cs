@@ -45,7 +45,7 @@ public class EnrollmentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        _enrollmentLogger.Information("Request for getting an enrollment is accepted.");
+        _enrollmentLogger.Information("Request for getting an enrollment with ID is accepted. ID : {EnrollmentId}", id);
 
         return _mediator.Send(
             new GetEnrollmentQuery(id),
@@ -83,7 +83,7 @@ public class EnrollmentsController : Controller
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        _enrollmentLogger.Information("Request for deleting an enrollment is accepted.");
+        _enrollmentLogger.Information("Request for deleting an enrollment with ID is accepted. ID : {EnrollmentId}", id);
 
         await _mediator.Send(
             new DeleteEnrollmentCommand(id),

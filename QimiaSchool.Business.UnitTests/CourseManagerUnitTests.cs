@@ -62,6 +62,46 @@ internal class CourseManagerUnitTests
                    It.Is<Course>(s => s == testCourse),
                    It.IsAny<CancellationToken>()), Times.Once);
     }
-    
 
+    [Test]
+    public async Task GetCourseByIdAsync_WhenCalled_ReturnsCourse()
+    {
+        // Arrange
+        var courseId = 1;
+        var expectedCourse = new Course
+        {
+            ID = courseId,
+            Title = "Sample Course",
+            Credits = 2
+        };
+
+        _mockCourseRepository
+            .Setup(sr => sr.GetByIdAsync(courseId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedCourse);
+
+        // Act
+        var resultCourse = await _courseManager.GetCourseByIdAsync(courseId, default);
+
+        // Assert
+        Assert.AreEqual(expectedCourse, resultCourse);
+    }
+
+    [Test]
+    public async Task UpdateCourseAsync_WhenCalled_UpdatesandReturnsSuccess()
+    {
+        var courseToUpdate = new Course
+        {
+            ID = 2,
+            Title = "Test Course",
+            Credits = 1,
+        };
+
+        _mockCourseRepository
+        .Setup(sr => sr.UpdateAsync(
+            It.Is<Course>(s => s == courseToUpdate),
+            It.IsAny<CancellationToken>()))
+        .Returns(Task.CompletedTask);
+
+        await _courseManager.UpdateCourseById(courseToUpdate, default);
+    }
 }

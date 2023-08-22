@@ -64,6 +64,48 @@ internal class StudentManagerUnitTests
                     It.Is<Student>(s => s == testStudent),
                     It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Test]
+    public async Task GetStudentByIdAsync_WhenCalled_ReturnsStudent()
+    {
+        var studentId = 1;
+        var expectedStudent = new Student
+        {
+            ID = 1,
+            EnrollmentDate = DateTime.Now,
+            FirstMidName = "Nurtest",
+            LastName = "NuTester"
+        };
+
+        _mockStudentRepository
+            .Setup(s=> s.GetByIdAsync(studentId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedStudent);
+
+        var resultStudent = await _studentManager.GetStudentByIdAsync(studentId, default);
+
+        Assert.AreEqual(expectedStudent, resultStudent);
+
+    }
+
+    [Test]
+    public async Task UpdateStudentAsync_WhenCalled_UpdatesandReturnsSuccess()
+    {
+        var studentToUpdate = new Student
+        {
+            ID = 2,
+            EnrollmentDate = DateTime.Now,
+            FirstMidName = "Vicreation",
+            LastName = "Qimia"
+        };
+
+        _mockStudentRepository
+        .Setup(sr => sr.UpdateAsync(
+            It.Is<Student>(s => s == studentToUpdate),
+            It.IsAny<CancellationToken>()))
+        .Returns(Task.CompletedTask);
+
+         await _studentManager.UpdateStudentAsync(studentToUpdate, default);
+    }
 }
 
 

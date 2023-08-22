@@ -64,4 +64,49 @@ internal class EnrollmentManagerUnitTests
                     It.Is<Enrollment>(s => s == testEnrollment),
                     It.IsAny<CancellationToken>()), Times.Once);
     }
+
+
+    [Test]
+    public async Task GetEnrollmentByIdAsync_WhenCalled_ReturnsEnrollment()
+    {
+        // Arrange
+        var enrollmentId = 1;
+        var expectedEnrollment = new Enrollment
+        {
+            ID = enrollmentId,
+            CourseID = 2,
+            StudentID = 3,
+            Grade = Grade.B
+        };
+
+        _mockEnrollmentRepository
+            .Setup(e => e.GetByIdAsync(enrollmentId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedEnrollment);
+
+        // Act
+        var resultEnrollment = await _EnrollmentManager.GetEnrollmentByIdAsync(enrollmentId, default);
+
+        // Assert
+        Assert.AreEqual(expectedEnrollment, resultEnrollment);
+    }
+
+    [Test]
+    public async Task UpdateEnrollmentAsync_WhenCalled_UpdatesandReturnsSuccess()
+    {
+        var enrollmentToUpdate = new Enrollment
+        {
+            ID = 2,
+            CourseID= 2,
+            StudentID = 3,
+            Grade = Grade.B
+        };
+
+        _mockEnrollmentRepository
+        .Setup(e => e.UpdateAsync(
+            It.Is<Enrollment>(e => e == enrollmentToUpdate),
+            It.IsAny<CancellationToken>()))
+        .Returns(Task.CompletedTask);
+
+        await _EnrollmentManager.UpdateEnrollmentAsync(enrollmentToUpdate, default);
+    }
 }
