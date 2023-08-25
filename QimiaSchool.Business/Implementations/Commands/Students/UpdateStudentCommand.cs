@@ -24,6 +24,6 @@ public class UpdateStudentCommand : IRequest<Unit>
 }
 
 
-// IRequest<Unit> is like a void, we can't use void since it is not a valid return type in C#. unit also give something like a readonly to data ve requesting.
+// IRequest<Unit> is like a void, we can't use void since it is not a valid return type in C#. unit also gives something like a readonly attribute to data ve requesting.
 // then we get ıd and Student by updateStudentDto
 // after we get it we will update it using UpdateStudentCommand

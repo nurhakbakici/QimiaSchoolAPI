@@ -104,4 +104,23 @@ internal class CourseManagerUnitTests
 
         await _courseManager.UpdateCourseById(courseToUpdate, default);
     }
+
+    [Test]
+    public async Task DeleteCourseAsync_WhenCalled_DeletesAndReturnsSuccess()
+    {
+        var courseToDelete = new Course
+        {
+            ID = 2,
+            Title = "Test Course",
+            Credits = 1,
+        };
+
+        _mockCourseRepository
+        .Setup(sr => sr.DeleteAsync(
+            It.Is<Course>(s => s == courseToDelete),
+            It.IsAny<CancellationToken>()))
+        .Returns(Task.CompletedTask);
+
+        await _courseManager.DeleteCourseById(courseToDelete.ID, default);
+    }
 }

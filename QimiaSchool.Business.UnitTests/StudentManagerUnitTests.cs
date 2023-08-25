@@ -106,6 +106,26 @@ internal class StudentManagerUnitTests
 
          await _studentManager.UpdateStudentAsync(studentToUpdate, default);
     }
+
+    [Test]
+    public async Task DeleteStudentAsync_WhenCalled_DeletesAndReturnsSuccess()
+    {
+        var studentToDelete = new Student
+        {
+            ID = 2,
+            EnrollmentDate = DateTime.Now,
+            FirstMidName = "Vicreation",
+            LastName = "Qimia"
+        };
+
+        _mockStudentRepository
+        .Setup(sr => sr.DeleteAsync(
+            It.Is<Student>(s => s == studentToDelete),
+            It.IsAny<CancellationToken>()))
+        .Returns(Task.CompletedTask);
+
+        await _studentManager.DeleteStudentByIdAsync(studentToDelete.ID, default);
+    }
 }
 
 

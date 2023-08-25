@@ -109,4 +109,25 @@ internal class EnrollmentManagerUnitTests
 
         await _EnrollmentManager.UpdateEnrollmentAsync(enrollmentToUpdate, default);
     }
+
+    [Test]
+    public async Task DeleteEnrollmentAsync_WhenCalled_DeletesAndReturnsSuccess()
+    {
+        var enrollmentToDelete = new Enrollment
+        {
+            ID = 2,
+            CourseID = 2,
+            StudentID = 3,
+            Grade = Grade.B
+        };
+
+        _mockEnrollmentRepository
+            .Setup(e => e.DeleteAsync(
+                It.Is<Enrollment>(s => s == enrollmentToDelete),
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        await _EnrollmentManager.DeleteEnrollmentByIdAsync(enrollmentToDelete.ID, default);
+    }
+
 }

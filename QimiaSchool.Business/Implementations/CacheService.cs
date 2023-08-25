@@ -43,7 +43,7 @@ public class CacheService : ICacheService
     {
         var options = new DistributedCacheEntryOptions();
 
-        if (expirationDate.HasValue) // ask why the original code use .HasValue attribute on friday morning.
+        if (expirationDate.HasValue)
         {
             options.AbsoluteExpirationRelativeToNow = expirationDate.Value;
         }

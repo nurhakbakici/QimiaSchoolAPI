@@ -19,6 +19,11 @@ using QimiaSchool.DataAccess.MessageBroker.Implementations;
 using Microsoft.Extensions.Options;
 using MassTransit;
 using QimiaSchool.Business.Implementations.Events.Courses;
+using QimiaSchool.Common;
+using System.Text;
+using QimiaSchool.Business.Implementations.Events.Students;
+using QimiaSchool.Business.Implementations.Events.Enrollments;
+using QimiaSchool.Business.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +67,17 @@ builder.Services.AddMassTransit(busConfigurator =>
     busConfigurator.SetKebabCaseEndpointNameFormatter();
 
     busConfigurator.AddConsumer<CourseCreatedEventConsumer>();
+    busConfigurator.AddConsumer<CourseUpdatedEventConsumer>();
+    busConfigurator.AddConsumer<CourseDeletedEventConsumer>();
+
+    busConfigurator.AddConsumer<StudentCreatedEventConsumer>();
+    busConfigurator.AddConsumer<StudentUpdatedEventConsumer>();
+    busConfigurator.AddConsumer<StudentDeletedEventConsumer>();
+
+    busConfigurator.AddConsumer<EnrollmentCreatedEventConsumer>();
+    busConfigurator.AddConsumer<EnrollmentUpdatedEventConsumer>();
+    busConfigurator.AddConsumer<EnrollmentDeletedEventConsumer>();
+
 
     busConfigurator.UsingRabbitMq((context, configurator) =>
     {
@@ -96,20 +112,28 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 
 
+builder.Services.Configure<Auth0Configuration>(builder.Configuration.GetSection("Auth0"));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 
-
 .AddJwtBearer(options =>
 {
+    var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Auth0:ClientSecret"]));
     options.Authority = $"{builder.Configuration["Auth0:Domain"]}";
     options.Audience = builder.Configuration["Auth0:Audience"];
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        NameClaimType = "name"
+        NameClaimType = "name",
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = key,
+        ValidIssuer = $"https://{builder.Configuration["Auth0:Domain"]}",
+        ValidAudience = builder.Configuration["Auth0:Audience"],
     };
 });
 
@@ -153,6 +177,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//app.UseMiddleware<TokenRefreshMiddleware>();
 
 app.MapControllers();
 
