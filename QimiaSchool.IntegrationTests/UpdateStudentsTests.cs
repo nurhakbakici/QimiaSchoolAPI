@@ -69,7 +69,7 @@ namespace QimiaSchool.IntegrationTests
             var response = await client.PutAsync("/students/NonExistingId", jsonContent);
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest); // Change this line
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }

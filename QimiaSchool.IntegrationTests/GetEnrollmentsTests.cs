@@ -33,7 +33,7 @@ namespace QimiaSchool.IntegrationTests
                 {
                     Student = student,
                     Course = new Course { Title = "Math" },
-                    Grade = Grade.A // Adjust as needed
+                    Grade = Grade.A 
                 },
                 new ()
                 {
